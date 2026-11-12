@@ -1,0 +1,159 @@
+/**
+ * 纹样与渐变（docs/04-视觉规范.md 第 3 / 4 章）
+ *
+ * 三条硬性要求：
+ *   1. 零图片资源 —— 全部 CSS 渐变 + 内联 SVG
+ *   2. 任意缩放清晰 —— 矢量，无位图
+ *   3. 极淡 —— 不抢内容，只在余光里能感知
+ */
+
+/* ─────────────────────────────────────────────────────────────
+   全局背景：三层叠加
+   ───────────────────────────────────────────────────────────── */
+
+/* 第 1 层（最底）：流云白底色 + 上下光晕 */
+.app-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 120% 60% at 50% -10%, rgba(168, 196, 204, 0.3) 0%, transparent 60%),
+    radial-gradient(ellipse 100% 50% at 50% 110%, rgba(233, 229, 220, 0.55) 0%, transparent 55%),
+    var(--liuyun-1);
+}
+
+/* 第 2 层 + 第 3 层：织线 + 云头纹 + 纸纤维，随光走 */
+.app-texture {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  opacity: 0.85;
+  background-image:
+    /* 织线：经 + 纬，间距 7px —— 「织机」隐喻的视觉落地 */
+    repeating-linear-gradient(0deg, rgba(78, 127, 140, 0.022) 0 1px, transparent 1px 7px),
+    repeating-linear-gradient(90deg, rgba(78, 127, 140, 0.014) 0 1px, transparent 1px 7px),
+    /* 云头纹：周期 96px */
+    radial-gradient(circle at 24px 32px, rgba(78, 127, 140, 0.038) 0 1.5px, transparent 2px),
+    radial-gradient(circle at 72px 16px, rgba(78, 127, 140, 0.028) 0 1.5px, transparent 2px),
+    radial-gradient(circle at 48px 64px, rgba(78, 127, 140, 0.024) 0 2px, transparent 2.5px),
+    radial-gradient(circle at 8px 80px, rgba(78, 127, 140, 0.025) 0 1px, transparent 1.5px),
+    /* 纸纤维噪点 */
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3CfeColorMatrix values='0 0 0 0 0.3 0 0 0 0 0.45 0 0 0 0 0.5 0 0 0 0.055 0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:
+    auto,
+    auto,
+    96px 96px,
+    96px 96px,
+    96px 96px,
+    96px 96px,
+    140px 140px;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   纵深渐变：上暖白下沉入潭底
+   ───────────────────────────────────────────────────────────── */
+
+.depth-gradient {
+  background: linear-gradient(
+    180deg,
+    var(--liuyun-0) 0%,
+    var(--liuyun-1) 22%,
+    var(--liuyun-2) 48%,
+    var(--qingtan-0) 72%,
+    var(--qingtan-1) 100%
+  );
+}
+
+/* 面板用的轻量纵深：只在中段做极淡过渡 */
+.panel-depth {
+  background: linear-gradient(
+    170deg,
+    var(--liuyun-0) 0%,
+    var(--liuyun-1) 55%,
+    rgba(234, 242, 244, 0.55) 100%
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────
+   五种纹样（可单独用于任意容器）
+   ───────────────────────────────────────────────────────────── */
+
+/* ① 云头纹 */
+.texture-cloud {
+  background-image:
+    radial-gradient(circle at 24px 32px, rgba(78, 127, 140, 0.045) 0 1.5px, transparent 2px),
+    radial-gradient(circle at 72px 16px, rgba(78, 127, 140, 0.035) 0 1.5px, transparent 2px),
+    radial-gradient(circle at 48px 64px, rgba(78, 127, 140, 0.03) 0 2px, transparent 2.5px),
+    radial-gradient(circle at 8px 80px, rgba(78, 127, 140, 0.025) 0 1px, transparent 1.5px);
+  background-size: 96px 96px;
+}
+
+/* ② 织线（经 + 纬） */
+.texture-weave {
+  background-image:
+    repeating-linear-gradient(0deg, rgba(78, 127, 140, 0.022) 0 1px, transparent 1px 7px),
+    repeating-linear-gradient(90deg, rgba(78, 127, 140, 0.014) 0 1px, transparent 1px 7px);
+}
+
+/* ③ 水波纹：内联 SVG 正弦波，周期 120×40 */
+.texture-wave {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='40'%3E%3Cpath d='M0 20 Q 15 8, 30 20 T 60 20 T 90 20 T 120 20' fill='none' stroke='%234E7F8C' stroke-width='0.7' stroke-opacity='0.12'/%3E%3C/svg%3E");
+  background-size: 120px 40px;
+}
+
+/* ④ 纸纤维噪点 */
+.texture-fiber {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3CfeColorMatrix values='0 0 0 0 0.3 0 0 0 0 0.45 0 0 0 0 0.5 0 0 0 0.055 0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 140px 140px;
+}
+
+/* ⑤ 菱形回纹 */
+.texture-diamond {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Cpath d='M12 2 L22 12 L12 22 L2 12 Z' fill='none' stroke='%234E7F8C' stroke-width='0.6' stroke-opacity='0.13'/%3E%3C/svg%3E");
+  background-size: 24px 24px;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   光晕与呼吸
+   ───────────────────────────────────────────────────────────── */
+
+.glow-top {
+  background: radial-gradient(
+    ellipse 120% 60% at 50% -10%,
+    rgba(168, 196, 204, 0.3) 0%,
+    transparent 60%
+  );
+}
+
+.glow-bottom {
+  background: radial-gradient(
+    ellipse 100% 50% at 50% 110%,
+    rgba(233, 229, 220, 0.55) 0%,
+    transparent 55%
+  );
+}
+
+@keyframes breathe {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* 用于「活的」元素：未回收线索的光晕、当前章节标记 */
+.breathe {
+  animation: breathe 3.2s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .breathe {
+    animation: none;
+    opacity: 1;
+  }
+}
