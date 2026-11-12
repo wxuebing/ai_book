@@ -1,0 +1,26 @@
+node_modules/
+dist/
+build/
+*.log
+*.err
+.DS_Store
+Thumbs.db
+
+# 索引是可重建的派生数据，永不入库
+.loom/
+# 本地工作区（用户的真实小说数据不该进代码仓）
+.workspace/
+# DSH 记忆库
+.dsh-meow/
+# 浏览器临时配置（可能含登录态与缓存）
+.chrometmp/
+# 本地验收截图（35MB，按需重新生成）
+shots/
+# 演示数据备份（pnpm seed 可重新生成）
+_demo-backup/
+# 个人创作研究稿，不入开源仓
+境界洞天_研究稿.md
+# 设计文档（含需求原文与设计讨论）不公开
+docs/
+# 品牌原图不公开
+assets/

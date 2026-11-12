@@ -1,0 +1,11 @@
+﻿import { chromium } from 'playwright-core';
+const CHROME='C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe';
+const B='http://127.0.0.1:5178';
+const lib = await (await fetch(B+'/api/library')).json();
+const id = lib.data.projects[0].id;
+const b=await chromium.launch({executablePath:CHROME,headless:true,args:['--no-sandbox','--disable-gpu','--hide-scrollbars']});
+const p=await (await b.newContext({viewport:{width:1600,height:1000},locale:'zh-CN'})).newPage();
+await p.goto(B+'/project/'+id+'/outline',{waitUntil:'networkidle'}); await p.waitForTimeout(900);
+await p.screenshot({path:'shots/r20-outline.png'});
+console.log('done');
+await b.close();

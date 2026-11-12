@@ -1,0 +1,14 @@
+{
+  "name": "@loom/server",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "src/main.ts",
+  "scripts": {
+    "start": "node src/main.ts",
+    "dev": "node --watch src/main.ts"
+  },
+  "dependencies": {
+    "@loom/core": "workspace:*"
+  }
+}

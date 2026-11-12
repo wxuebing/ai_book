@@ -1,0 +1,48 @@
+{
+  "name": "liuyun-loom",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "流云织小说工作台 —— 以 Obsidian 库为底层知识底座的小说创作工作台",
+  "engines": {
+    "node": ">=22.13"
+  },
+  "scripts": {
+    "dev:server": "node --watch apps/server/src/main.ts",
+    "dev:web": "pnpm --filter @loom/web dev",
+    "build:web": "pnpm --filter @loom/web build",
+    "start": "node apps/server/src/main.ts",
+    "typecheck": "tsc -p tsconfig.check.json && tsc -p apps/web/tsconfig.json --noEmit",
+    "test": "node --test \"packages/core/test/*.test.ts\"",
+    "selfcheck": "node --test \"packages/core/test/*.test.ts\"",
+    "check:api": "node scripts/api-smoke.ts",
+    "check:mcp": "node scripts/mcp-smoke.ts",
+    "check:ui": "node scripts/ui-check.ts",
+    "check:nav": "node scripts/nav-check.ts",
+    "check:nav2": "node scripts/nav-check2.ts",
+    "check:board": "node scripts/board-check.ts",
+    "check:graph": "node scripts/graph-check.ts",
+    "check:quote": "node scripts/quote-check.ts",
+    "check:hierarchy": "node scripts/hierarchy-check.ts",
+    "check:plus": "node scripts/plus-check.ts",
+    "check:button": "node scripts/button-check.ts",
+    "check:round6": "node scripts/round6-check.ts",
+    "check:logo": "node scripts/logo-check.ts",
+    "check:round8": "node scripts/round8-check.ts",
+    "check:all": "node scripts/check-all.ts",
+    "shoot": "node scripts/shoot.ts",
+    "shoot:logo": "node scripts/shoot-logo.ts",
+    "seed": "node scripts/seed-demo.ts",
+    "check:round9": "node scripts/round9-check.ts",
+    "check:round11": "node scripts/round11-check.ts",
+    "shoot:r11": "node scripts/shoot11.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "playwright-core": "^1.65.0",
+    "typescript": "^5.7.2"
+  },
+  "dependencies": {
+    "@loom/core": "workspace:*"
+  }
+}
