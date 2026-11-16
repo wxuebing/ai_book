@@ -14,6 +14,21 @@ const BASE = process.env.LOOM_BASE ?? 'http://127.0.0.1:5178';
 let pass = 0;
 let fail = 0;
 
+/** 找 Python 解释器，不写死本机路径 */
+function resolvePython(): string | null {
+  const fromEnv = process.env.LOOM_PYTHON;
+  if (fromEnv) return fromEnv;
+  for (const name of ['python', 'python3', 'py']) {
+    try {
+      execFileSync(name, ['--version'], { stdio: 'ignore' });
+      return name;
+    } catch {
+      // 换下一个候选
+    }
+  }
+  return null;
+}
+
 function check(name: string, cond: boolean, detail?: unknown): void {
   if (cond) {
     pass++;
@@ -71,8 +86,13 @@ async function main(): Promise<void> {
 
   console.log('\n【4. 实际像素验证：圆角外是透明】');
   {
+    // 不写死解释器路径：优先 LOOM_PYTHON，其次 PATH 上的 python/py，最后才用常见位置
+    const python = resolvePython();
+    if (!python) {
+      console.log('  ⚠ 跳过像素验证：未找到 Python 解释器（可设 LOOM_PYTHON 指定）');
+    } else {
     const out = execFileSync(
-      'python',
+      python,
       ['scripts/check-logo-alpha.py'],
       { encoding: 'utf8' },
     );
@@ -82,6 +102,7 @@ async function main(): Promise<void> {
     const center = Number((centerLine.split('=')[1] ?? '0').trim());
     check('四角 alpha 均为 0（透明）', corners.length === 4 && corners.every((a: number) => a === 0), corners);
     check('中心 alpha 为 255（不透明）', center === 255, center);
+    }
   }
 
   console.log('\n【5. 尺寸与收缩态】');
