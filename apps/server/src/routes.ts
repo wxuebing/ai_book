@@ -670,6 +670,12 @@ export function registerRoutes(router: Router, deps: ApiDeps): void {
     ok(ctx.res, { removed: typeNotes.length, installed, packs });
   });
 
+  /** 3.10b 参照：信息来源、典籍与现实依据 */
+  router.get('/api/project/:id/references', async (ctx) => {
+    const engine = await engineOf(ctx.params.id!);
+    ok(ctx.res, { references: await engine.references() });
+  });
+
   /** 3.10 概念别名 */
   router.get('/api/project/:id/concepts', async (ctx) => {
     const engine = await engineOf(ctx.params.id!);
@@ -781,7 +787,7 @@ export function registerRoutes(router: Router, deps: ApiDeps): void {
     const projects = await ws.list();
     const activeId = ctx.query.get('active') ?? meta.activeProject;
 
-    // 项目库三级：五个主入口 + 关系网（关系网是具体信息，不进首页）
+    // 项目库三级：创作入口（剧情/关系网是全局页，不进三级）
     const PROJECT_ENTRIES = [
       { id: 'outline', label: '大纲' },
       { id: 'ideas', label: '灵感' },
@@ -801,13 +807,19 @@ export function registerRoutes(router: Router, deps: ApiDeps): void {
           children: [],
         },
         {
-          // 一级 2：灵感墙
+          // 一级 2：便签墙
           id: 'ideas',
-          label: '灵感墙',
+          label: '便签墙',
           children: [],
         },
         {
-          // 一级 3：关系网
+          // 一级 3：剧情（全局，右上角切换小说）
+          id: 'plot',
+          label: '剧情',
+          children: [],
+        },
+        {
+          // 一级 4：关系网（全局，右上角切换小说）
           id: 'graph',
           label: '关系网',
           children: [],

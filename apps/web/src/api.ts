@@ -188,6 +188,14 @@ export interface SearchHit {
   snippet: string;
 }
 
+export interface ReferenceItem {
+  path: string;
+  title: string;
+  frontmatter: Record<string, unknown>;
+  excerpt: string;
+  mtime: number;
+}
+
 export interface CheckResponse {
   broken: Array<{ source: string; target: string; raw: string }>;
   scopeConflicts: Array<{ items: string[]; reason: string }>;

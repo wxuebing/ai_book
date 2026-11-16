@@ -55,6 +55,7 @@ export const STANDARD_DIRS = [
   '07-类型',
   '08-共享',
   '09-灵感', // 灵感宝库（导航里排在大纲之后）
+  '10-参照', // 信息来源、典籍与现实依据
 ];
 
 export class Workspace {

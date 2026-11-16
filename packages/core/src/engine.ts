@@ -430,6 +430,29 @@ export class NovelEngine {
     return s.concepts.concepts;
   }
 
+  /** 参照：信息来源、典籍与现实依据（元类型，不进统计/关系图） */
+  async references(): Promise<
+    Array<{
+      path: string;
+      title: string;
+      frontmatter: Record<string, unknown>;
+      excerpt: string;
+      mtime: number;
+    }>
+  > {
+    const s = await this.load();
+    return s.notes
+      .filter((n) => n.type === '_reference')
+      .sort((a, b) => b.mtime - a.mtime)
+      .map((n) => ({
+        path: n.path,
+        title: n.title,
+        frontmatter: n.frontmatter as Record<string, unknown>,
+        excerpt: excerptOf(n, 180),
+        mtime: n.mtime,
+      }));
+  }
+
   /** 作用域汇总 */
   async scopes(): Promise<{ spaces: string[]; times: string[] }> {
     const s = await this.load();
@@ -695,6 +718,7 @@ export function defaultFolderFor(type: string | null): string {
     case '伏笔': return '04-线索';
     case '人物': return '05-人物';
     case '_type': return '07-类型';
+    case '_reference': return '10-参照';
     case '灵感': return '09-灵感';
     case null: return '06-设定';
     default: return '06-设定';

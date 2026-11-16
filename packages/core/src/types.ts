@@ -390,7 +390,7 @@ export interface TypeGroup {
 export const UNTYPED = '__untyped';
 
 /** 内置元类型 */
-export const META_TYPES = ['_type', '_concept', '_template', '_project'] as const;
+export const META_TYPES = ['_type', '_concept', '_template', '_project', '_reference'] as const;
 export type MetaType = (typeof META_TYPES)[number];
 
 export function isMetaType(t: string | null): t is MetaType {
