@@ -1,0 +1,266 @@
+/**
+ * 古风化增补样式（最后引入，覆盖组件默认）
+ *
+ * 1) 山水背景层 .app-scene（配 Backdrop.tsx）
+ * 2) 导航栏底部「设置 / 导入导出」两枚按钮的古风重绘
+ * 3) 外观主题卡（设置 → 外观主题）
+ * 4) 主按钮的墨色渐变质感
+ *
+ * 全部基于主题变量，换主题自动跟随。
+ */
+
+/* ─────────────────────────────────────────────────────────────
+   1. 背景：底色光晕 + 山水层
+   ───────────────────────────────────────────────────────────── */
+
+/* 覆盖 texture.css 里写死的冷色光晕，改用主题场景色 */
+.app-bg {
+  background:
+    radial-gradient(ellipse 120% 60% at 50% -8%, var(--scene-mist) 0%, transparent 62%),
+    radial-gradient(
+      ellipse 100% 55% at 50% 112%,
+      color-mix(in srgb, var(--liuyun-3) 70%, transparent) 0%,
+      transparent 58%
+    ),
+    var(--liuyun-1);
+}
+
+.app-scene {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.app-scene-svg {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* 顶部一抹雾气，让山与天衔接更柔 */
+.app-scene::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 120% 50% at 50% 2%, var(--scene-mist) 0%, transparent 58%);
+  opacity: 0.75;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   2. 导航底部：设置 / 导入导出（古风双钮）
+   ───────────────────────────────────────────────────────────── */
+
+.nav-bottom {
+  gap: 10px;
+  padding: 12px 10px;
+}
+
+.nav-bottom-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 0;
+  position: relative;
+  padding: 10px 6px;
+  border-radius: 12px;
+  border: 1px solid color-mix(in srgb, var(--qingtan-2) 72%, transparent);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--liuyun-0) 94%, transparent),
+    color-mix(in srgb, var(--liuyun-2) 90%, transparent)
+  );
+  color: var(--qingtan-5);
+  font-family: var(--font-serif);
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.55),
+    0 1px 2px rgba(31, 65, 75, 0.06);
+  transition:
+    transform var(--dur) var(--ease),
+    box-shadow var(--dur) var(--ease),
+    color var(--dur) var(--ease),
+    border-color var(--dur) var(--ease),
+    background var(--dur) var(--ease);
+}
+
+.nav-bottom-icon {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  transition: transform var(--dur) var(--ease);
+}
+.nav-bottom-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+.nav-bottom-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  line-height: 1;
+}
+
+.nav-bottom-btn:hover {
+  transform: translateY(-2px);
+  color: var(--qingtan-7);
+  border-color: var(--qingtan-4);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--qingtan-0) 80%, var(--liuyun-0)),
+    color-mix(in srgb, var(--qingtan-1) 70%, var(--liuyun-1))
+  );
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    0 10px 20px -10px color-mix(in srgb, var(--qingtan-4) 60%, transparent),
+    0 2px 6px rgba(31, 65, 75, 0.08);
+}
+.nav-bottom-btn:hover .nav-bottom-icon {
+  transform: translateY(-1px) scale(1.04);
+}
+
+.nav-bottom-btn.is-active {
+  color: #fff;
+  border-color: transparent;
+  background: linear-gradient(180deg, var(--qingtan-4), var(--qingtan-5));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    0 8px 18px -10px color-mix(in srgb, var(--qingtan-5) 75%, transparent);
+}
+.nav-bottom-btn.is-active svg {
+  color: #fff;
+}
+
+/* 收缩态：竖排、只留图标 */
+.nav.is-collapsed .nav-bottom {
+  flex-direction: column;
+}
+.nav.is-collapsed .nav-bottom-btn {
+  width: 100%;
+}
+.nav.is-collapsed .nav-bottom-label {
+  display: none;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   3. 外观主题卡
+   ───────────────────────────────────────────────────────────── */
+
+.theme-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(228px, 1fr));
+  gap: 16px;
+  margin-top: 14px;
+}
+
+.theme-card {
+  position: relative;
+  border: 1.5px solid var(--liuyun-3);
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--liuyun-0);
+  cursor: pointer;
+  outline: none;
+  transition:
+    transform var(--dur) var(--ease),
+    box-shadow var(--dur) var(--ease),
+    border-color var(--dur) var(--ease);
+}
+.theme-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--qingtan-3);
+}
+.theme-card:focus-visible {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--qingtan-3) 45%, transparent);
+}
+.theme-card.is-active {
+  border-color: var(--qingtan-4);
+  box-shadow:
+    0 0 0 3px color-mix(in srgb, var(--qingtan-4) 20%, transparent),
+    var(--shadow-md);
+}
+
+.theme-preview {
+  position: relative;
+  height: 120px;
+  overflow: hidden;
+}
+.theme-scene {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.theme-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-family: var(--font-serif);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: #fff;
+  background: color-mix(in srgb, var(--qingtan-6) 88%, transparent);
+  padding: 3px 9px;
+  border-radius: 999px;
+}
+
+.theme-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 12px 14px 14px;
+}
+.theme-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--qingtan-6);
+  letter-spacing: 0.04em;
+}
+.theme-tag {
+  font-size: 12px;
+  color: var(--ink-mute);
+  line-height: 1.55;
+}
+.theme-dots {
+  display: flex;
+  gap: 5px;
+  margin-top: 6px;
+}
+.theme-dots i {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   4. 主按钮：墨色渐变 + 微光（不改布局）
+   ───────────────────────────────────────────────────────────── */
+
+.btn-primary {
+  border-color: transparent;
+  background: linear-gradient(180deg, var(--qingtan-4), var(--qingtan-5));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    0 2px 6px -2px color-mix(in srgb, var(--qingtan-5) 55%, transparent);
+}
+.btn-primary:not(:disabled):hover {
+  transform: translateY(-1px);
+  background: linear-gradient(180deg, var(--qingtan-3), var(--qingtan-4));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    0 8px 18px -10px color-mix(in srgb, var(--qingtan-4) 70%, transparent);
+}

@@ -12,6 +12,7 @@ import { useRoute } from './router';
 import { Nav, type NavSelection } from './Nav';
 import { Page } from './Page';
 import { CreateProjectDialog } from './pages/CreateProjectDialog';
+import { Backdrop } from './Backdrop';
 
 const SELECTION_KEY = 'loom:nav:selection';
 
@@ -63,6 +64,10 @@ export function App(): React.ReactElement {
       setSelection({ root: 'library', secondary: s[1], tertiary: s[2] });
     } else if (s[0] === 'ideas') {
       setSelection({ root: 'ideas' });
+    } else if (s[0] === 'plot') {
+      setSelection({ root: 'plot' });
+    } else if (s[0] === 'graph') {
+      setSelection({ root: 'graph' });
     } else if (s[0] === 'project') {
       setSelection({ root: 'project', secondary: s[1], tertiary: s[2] });
     } else if (s[0] === 'tools') {
@@ -100,6 +105,7 @@ export function App(): React.ReactElement {
     return (
       <div className="app">
         <div className="app-bg" aria-hidden="true" />
+        <Backdrop />
         <div className="app-texture" aria-hidden="true" />
         <div className="app-error">
           <h1 className="serif">连不上工作台</h1>
@@ -114,6 +120,7 @@ export function App(): React.ReactElement {
   return (
     <div className="app">
       <div className="app-bg" aria-hidden="true" />
+      <Backdrop />
       <div className="app-texture" aria-hidden="true" />
 
       <div className="app-shell">

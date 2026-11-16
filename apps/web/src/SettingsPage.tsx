@@ -18,6 +18,7 @@ import React from 'react';
 import { navigate } from './router';
 import { ToolPage } from './pages/ToolPage';
 import { PlainSettings } from './pages/PlainSettings';
+import { ThemeSettings } from './pages/ThemeSettings';
 import { TrashPage } from './pages/TrashPage';
 import type { LibraryResponse, ToolItem } from './api';
 
@@ -29,6 +30,7 @@ export interface SettingsTab {
 /** 二级导航（docs/01 2.2；工具能力并入设置，全部可达） */
 export const SETTINGS_TABS: SettingsTab[] = [
   { id: 'plain', label: '普通编辑' },
+  { id: 'appearance', label: '外观主题' },
   { id: 'links', label: '信息关系网' },
   { id: 'mcp', label: 'MCP' },
   { id: 'check', label: '一致性检查' },
@@ -78,6 +80,8 @@ export function SettingsPage({
       <div className="settings-content">
         {current.id === 'plain' ? (
           <PlainSettings library={library} onReload={onReload} />
+        ) : current.id === 'appearance' ? (
+          <ThemeSettings />
         ) : current.id === 'trash' ? (
           <TrashPage onReload={onReload} />
         ) : (

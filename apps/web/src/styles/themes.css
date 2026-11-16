@@ -1,0 +1,235 @@
+/**
+ * 古风主题调色板（appearance themes）
+ *
+ * 与 tokens.css 同构：tokens.css 定义默认 :root 变量（= 云岫墨韵），
+ * 本文件用 html[data-theme="..."] 覆盖同名变量，实现全站换肤。
+ * 选择器比 :root 多一个元素+属性，特异性更高，无需关心引入顺序。
+ *
+ * 另定义 --scene-* 给 Backdrop.tsx 的山川/溪流/修竹上色。
+ */
+
+/* ─────────────────────────────────────────────────────────────
+   背景场景默认色（云岫墨韵）
+   ───────────────────────────────────────────────────────────── */
+:root {
+  --scene-far: #b9cdd4;
+  --scene-mid: #8fb0ba;
+  --scene-near: #5f8794;
+  --scene-water: #7ba3ae;
+  --scene-bamboo: #6f9278;
+  --scene-sun: #c4735a;
+  --scene-mist: rgba(168, 196, 204, 0.35);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   1. 云岫墨韵（默认）—— 场景色对齐清潭蓝，其余沿用 tokens.css
+   ───────────────────────────────────────────────────────────── */
+html[data-theme='moyun'] {
+  --scene-far: #b9cdd4;
+  --scene-mid: #8fb0ba;
+  --scene-near: #5f8794;
+  --scene-water: #7ba3ae;
+  --scene-bamboo: #6f9278;
+  --scene-sun: #c4735a;
+  --scene-mist: rgba(168, 196, 204, 0.35);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   2. 青绿山水 —— 石绿 / 青碧
+   ───────────────────────────────────────────────────────────── */
+html[data-theme='qinglv'] {
+  --liuyun-0: #fcfdf7;
+  --liuyun-1: #f6f7ee;
+  --liuyun-2: #eef1e4;
+  --liuyun-3: #e2e7d5;
+  --liuyun-4: #d0d8c1;
+  --liuyun-5: #b3bfa1;
+
+  --qingtan-0: #eef4e9;
+  --qingtan-1: #d8e6cf;
+  --qingtan-2: #b5d0a8;
+  --qingtan-3: #86ad84;
+  --qingtan-4: #4f8a63;
+  --qingtan-5: #2f5d47;
+  --qingtan-6: #21402f;
+  --qingtan-7: #122418;
+
+  --ink: #1c3327;
+  --ink-soft: #47604f;
+  --ink-mute: #7c9083;
+  --ink-nav: #2a4535;
+
+  --clue: #b06a3c;
+  --payoff: #4f8a63;
+  --danger: #a85a4a;
+  --warn: #b98a3c;
+  --ok: #4f8a63;
+
+  --scene-far: #b8cdb0;
+  --scene-mid: #8bb086;
+  --scene-near: #588a5f;
+  --scene-water: #7bb0a0;
+  --scene-bamboo: #5f8f52;
+  --scene-sun: #c9a24a;
+  --scene-mist: rgba(150, 190, 150, 0.28);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   3. 烟雨江南 —— 青灰如雨
+   ───────────────────────────────────────────────────────────── */
+html[data-theme='yanyu'] {
+  --liuyun-0: #f7fafa;
+  --liuyun-1: #eef2f3;
+  --liuyun-2: #e6ecee;
+  --liuyun-3: #dae2e5;
+  --liuyun-4: #c8d3d7;
+  --liuyun-5: #adbcc1;
+
+  --qingtan-0: #e9f0f2;
+  --qingtan-1: #d3e0e3;
+  --qingtan-2: #b3c7cc;
+  --qingtan-3: #8aa6ad;
+  --qingtan-4: #5f8189;
+  --qingtan-5: #476871;
+  --qingtan-6: #33505a;
+  --qingtan-7: #20343c;
+
+  --ink: #24343a;
+  --ink-soft: #4b5f66;
+  --ink-mute: #7e9096;
+  --ink-nav: #2c444c;
+
+  --clue: #b0705a;
+  --payoff: #4e8a86;
+  --danger: #a8615a;
+  --warn: #b78a56;
+  --ok: #4e8a86;
+
+  --scene-far: #c2d2d6;
+  --scene-mid: #9db6bd;
+  --scene-near: #6f929b;
+  --scene-water: #8fb2ba;
+  --scene-bamboo: #6f978a;
+  --scene-sun: #b9a06a;
+  --scene-mist: rgba(150, 180, 190, 0.38);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   4. 朱砂笺 —— 暖笺 + 朱砂
+   ───────────────────────────────────────────────────────────── */
+html[data-theme='zhusha'] {
+  --liuyun-0: #fdf8f0;
+  --liuyun-1: #f9efe1;
+  --liuyun-2: #f3e6d3;
+  --liuyun-3: #ead8c0;
+  --liuyun-4: #dcc4a8;
+  --liuyun-5: #c8ab8c;
+
+  --qingtan-0: #fbeee8;
+  --qingtan-1: #f3d9cf;
+  --qingtan-2: #e3b3a3;
+  --qingtan-3: #cf8b74;
+  --qingtan-4: #b6503a;
+  --qingtan-5: #9a3d2c;
+  --qingtan-6: #7c2d20;
+  --qingtan-7: #571d14;
+
+  --ink: #3a2622;
+  --ink-soft: #5f443d;
+  --ink-mute: #8d7169;
+  --ink-nav: #4a302a;
+
+  --clue: #b6503a;
+  --payoff: #6f8a52;
+  --danger: #b03a2f;
+  --warn: #b9823a;
+  --ok: #6f8a52;
+
+  --scene-far: #e0c3a8;
+  --scene-mid: #cf9d80;
+  --scene-near: #a86a52;
+  --scene-water: #c98f72;
+  --scene-bamboo: #8a6d4a;
+  --scene-sun: #c0392b;
+  --scene-mist: rgba(210, 170, 140, 0.3);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   5. 月白霜天 —— 月白 + 靛蓝
+   ───────────────────────────────────────────────────────────── */
+html[data-theme='yuebai'] {
+  --liuyun-0: #f8fbfd;
+  --liuyun-1: #eef3f7;
+  --liuyun-2: #e6edf2;
+  --liuyun-3: #dae4eb;
+  --liuyun-4: #c7d4de;
+  --liuyun-5: #aebfcc;
+
+  --qingtan-0: #eaf1f7;
+  --qingtan-1: #d5e2ee;
+  --qingtan-2: #b3c8dc;
+  --qingtan-3: #88a6c2;
+  --qingtan-4: #587f9f;
+  --qingtan-5: #42647f;
+  --qingtan-6: #2f4a62;
+  --qingtan-7: #1d3040;
+
+  --ink: #1f2c38;
+  --ink-soft: #465866;
+  --ink-mute: #7a8b99;
+  --ink-nav: #28394a;
+
+  --clue: #b0765a;
+  --payoff: #4e7f92;
+  --danger: #a85a62;
+  --warn: #b08a56;
+  --ok: #4e7f92;
+
+  --scene-far: #c3d3e2;
+  --scene-mid: #9fb8cd;
+  --scene-near: #7698b3;
+  --scene-water: #9bb9cf;
+  --scene-bamboo: #7d94a6;
+  --scene-sun: #e9e1cc;
+  --scene-mist: rgba(190, 210, 230, 0.4);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   6. 竹影清风 —— 浅碧 + 修竹
+   ───────────────────────────────────────────────────────────── */
+html[data-theme='zhuying'] {
+  --liuyun-0: #f9fcf4;
+  --liuyun-1: #f1f6ea;
+  --liuyun-2: #e8f0df;
+  --liuyun-3: #dbe6cf;
+  --liuyun-4: #c9d7b9;
+  --liuyun-5: #b0c19d;
+
+  --qingtan-0: #eef5e6;
+  --qingtan-1: #dcebd0;
+  --qingtan-2: #bfd8ae;
+  --qingtan-3: #94b783;
+  --qingtan-4: #5f8a53;
+  --qingtan-5: #4a6f42;
+  --qingtan-6: #385633;
+  --qingtan-7: #243a22;
+
+  --ink: #22301f;
+  --ink-soft: #4a5c45;
+  --ink-mute: #7f9179;
+  --ink-nav: #2e4029;
+
+  --clue: #a8703c;
+  --payoff: #5f8a53;
+  --danger: #a85a4a;
+  --warn: #b08a3c;
+  --ok: #5f8a53;
+
+  --scene-far: #c6d8b6;
+  --scene-mid: #a2c08c;
+  --scene-near: #6f9a5c;
+  --scene-water: #86ae8f;
+  --scene-bamboo: #4f7d43;
+  --scene-sun: #cbb26a;
+  --scene-mist: rgba(170, 200, 150, 0.3);
+}
