@@ -1,7 +1,7 @@
 /**
  * 第十一轮验收（导航重构 + 设置三栏 + 设定多行多列）
  *
- * 1. 一级 = 小说库 / 灵感墙 / 关系网 / 工作区（4 项）
+ * 1. 一级 = 小说库 / 便签墙 / 剧情 / 关系网 / 工作区（5 项）
  * 2. 设置回底部（齿轮），导入导出在右侧
  * 3. 设置 = 三栏，二级导航 6 项
  * 4. 小说库：二级改右侧窄下拉（可滚动），三级合并成一页
@@ -40,18 +40,20 @@ async function main(): Promise<void> {
   const css = cssMatch ? await (await fetch(BASE + cssMatch[1]!)).text() : '';
   const js = jsMatch ? await (await fetch(BASE + jsMatch[1]!)).text() : '';
 
-  console.log('\n【1. 一级导航 4 项】');
+  console.log('\n【1. 一级导航 5 项】');
   {
     const nav = await (await fetch(BASE + '/api/nav')).json();
     const roots = nav?.data?.roots ?? [];
     const ids = roots.map((r: { id: string }) => r.id);
     check('含 library', ids.includes('library'), ids);
-    check('含 ideas（灵感墙）', ids.includes('ideas'), ids);
+    check('含 ideas（便签墙）', ids.includes('ideas'), ids);
+    check('含 plot（剧情）', ids.includes('plot'), ids);
     check('含 graph（关系网）', ids.includes('graph'), ids);
     check('含 project（工作区）', ids.includes('project'), ids);
     check('不含 settings（设置回底部）', !ids.includes('settings'), ids);
   }
   check('导航标签含「便签墙」', js.includes('便签墙'));
+  check('导航标签含「剧情」', js.includes('剧情'));
   check('导航标签含「关系网」', js.includes('关系网'));
   check('有空白间隔 .nav-gap', css.includes('.nav-gap'));
 
@@ -63,7 +65,7 @@ async function main(): Promise<void> {
     check('设置按钮存在', js.includes('"/settings/plain"') || js.includes('/settings/plain'));
     check('导入导出按钮存在', js.includes('/bottom/io'));
     check('底部不再有回收站', !js.includes('/bottom/trash'));
-    check('导入导出用新图标（IconImportExport）', js.includes('M5 2v6') && js.includes('M2.6 11.2v1.4'));
+    check('导入导出用新图标（书卷 + 双向箭头）', js.includes('M2.5 9.1h4.4') && js.includes('M17.1 14.9h4.4'));
   }
 
   console.log('\n【3. 设置 = 三栏 + 二级导航 6 项】');

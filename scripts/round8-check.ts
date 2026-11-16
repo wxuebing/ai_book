@@ -45,9 +45,9 @@ async function main(): Promise<void> {
 
   console.log('\n【1. Logo 已裁剪（去掉灰边）】');
   {
-    const r = await fetch(`${BASE}/logo-128.jpg`);
+    const r = await fetch(`${BASE}/logo-128.png`);
     const buf = Buffer.from(await r.arrayBuffer());
-    check('logo-128.jpg 可访问', r.ok && buf.length > 0);
+    check('logo-128.png 可访问', r.ok && buf.length > 0);
     // 裁剪后的 logo 四角应是内容色（深青/金），不是浅灰背景
     // 用文件大小间接判断：裁剪后细节占比更高
     check('裁剪版尺寸合理（>3KB 有细节）', buf.length > 3000, buf.length);

@@ -63,8 +63,9 @@ async function main(): Promise<void> {
     const nav = await api('GET', '/api/nav');
     const roots = nav.json?.data?.roots ?? [];
     const ids = roots.map((r: any) => r.id);
-    check('一级共 4 项（小说库/灵感墙/关系网/工作区）', ids.length === 4, ids);
+    check('一级共 5 项（小说库/便签墙/剧情/关系网/工作区）', ids.length === 5, ids);
     check('含 library', ids.includes('library'));
+    check('含 plot', ids.includes('plot'));
     check('含 project', ids.includes('project'));
     check('设置已移到底部（不在一级）', !ids.includes('settings'), ids);
 

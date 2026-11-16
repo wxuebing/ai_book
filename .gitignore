@@ -14,6 +14,8 @@ Thumbs.db
 .dsh-meow/
 # 浏览器临时配置（可能含登录态与缓存）
 .chrometmp/
+# DSH 沙箱 ACL 诊断备份（纯本机环境产物，与项目无关）
+.acl-recovery/
 # 本地验收截图（35MB，按需重新生成）
 shots/
 # 演示数据备份（pnpm seed 可重新生成）

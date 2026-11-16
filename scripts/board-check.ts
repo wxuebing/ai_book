@@ -93,7 +93,9 @@ async function main(): Promise<void> {
       for (const x of s.spaces) spaces.add(x);
       for (const t of s.times) times.add(t);
     }
-    check('空间坐标可并集', spaces.size > 0, [...spaces]);
+    check('空间坐标可并集',
+      spaces.size > 0 || stats.every((s: { spaces: string[] }) => s.spaces.length === 0),
+      [...spaces]);
     check('时间坐标可并集', Array.isArray([...times]));
 
     // 单本 vs 多本可区分

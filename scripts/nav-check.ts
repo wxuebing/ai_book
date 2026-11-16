@@ -93,7 +93,7 @@ async function main(): Promise<void> {
   }
 
   console.log('\n【8. 工具库图标换掉（与书/文件夹区分）】');
-  check('设置用齿轮图标', js.includes('M12 15.4a3.4') && js.includes('M19.2 13.1a1.6'));
+  check('设置用齿轮图标（古风厚齿轮）', js.includes('0,45,90,135,180,225,270,315'));
   check('不再是齿轮同心圆造型', !js.includes('circle cx="8" cy="8" r="2.1"'));
 
   console.log('\n【9. 层级视觉：流云织墨绿 / 一级加粗 / 二级内收不加粗】');

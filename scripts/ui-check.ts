@@ -123,7 +123,7 @@ async function main() {
       check('一致性检查有结果结构', Array.isArray(check1?.data?.broken));
 
       const nav = await (await fetch(BASE + '/api/nav')).json();
-      check('导航四根', nav?.data?.roots?.length === 4);
+      check('导航五根', nav?.data?.roots?.length === 5);
       const proj = nav?.data?.roots?.find((r: any) => r.id === 'project');
       check('项目库三级含关系网与灵感共 7', proj?.children?.[0]?.children?.length === 7,
         proj?.children?.[0]?.children?.length);

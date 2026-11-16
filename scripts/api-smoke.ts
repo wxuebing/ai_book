@@ -297,9 +297,9 @@ async function main(): Promise<void> {
     {
       const r = await api('GET', '/api/nav');
       check('GET /api/nav 200', r.status === 200);
-      check('四个根节点', r.json?.data?.roots?.length === 4, r.json?.data?.roots?.length);
-      check('一级是小说库/灵感墙/关系网/工作区',
-        r.json?.data?.roots?.map((x: any) => x.id).join(',') === 'library,ideas,graph,project');
+      check('五个根节点', r.json?.data?.roots?.length === 5, r.json?.data?.roots?.length);
+      check('一级是小说库/便签墙/剧情/关系网/工作区',
+        r.json?.data?.roots?.map((x: any) => x.id).join(',') === 'library,ideas,plot,graph,project');
       const proj = r.json?.data?.roots?.find((x: any) => x.id === 'project');
       check('激活的书展开三级', proj?.children?.[0]?.expanded === true);
       check('三级含关系网与灵感（共 7 项）', proj?.children?.[0]?.children?.length === 7,
