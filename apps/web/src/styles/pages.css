@@ -1967,6 +1967,86 @@ button.side-link:hover {
   line-height: 1.8;
 }
 
+/* ─────────────────────────────────────────────────────────────
+   科技感便签墙（2026-11-16）
+
+   用户原话：「便签墙我想让它更有科技感……就是那种颗粒，鼠标移动上去会留下波纹的，
+   每一个小粒子都是两个颜色，鼠标移动会留下纹路，并且有拖尾。」
+   「双色粒子主要是为了让它有运动感……像 LED 灯那样跑字幕。」
+
+   做法：深色底板 + ParticleField 画布（粒子钉在网格上，靠双色切换产生运动感）。
+   粒子层 pointer-events:none，绝不挡便签点击；便签本体仍是暖色便签纸，形成冷暖对比。
+   ───────────────────────────────────────────────────────────── */
+
+.idea-wall-tech {
+  background-color: #0d1620;
+  background-image:
+    /* 中心微光，避免死黑 */
+    radial-gradient(120% 90% at 50% 0%, rgba(78, 127, 140, 0.22) 0%, rgba(13, 22, 32, 0) 62%),
+    /* 极细网格：科技底纹 */
+    linear-gradient(rgba(122, 163, 174, 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(122, 163, 174, 0.055) 1px, transparent 1px);
+  background-size: auto, 26px 26px, 26px 26px;
+  border-radius: var(--radius-lg);
+  box-shadow:
+    inset 0 0 0 1px rgba(122, 163, 174, 0.18),
+    inset 0 0 60px rgba(0, 0, 0, 0.55),
+    0 6px 24px rgba(10, 18, 26, 0.28);
+  overflow: hidden;
+}
+
+/* 粒子画布：铺满底板，在内容之下 */
+.idea-wall-particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+.particle-field-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* 内容层抬到粒子之上 */
+.idea-wall-tech > .idea-wall-bar,
+.idea-wall-tech > .idea-grid,
+.idea-wall-tech > .idea-wall-empty {
+  position: relative;
+  z-index: 1;
+}
+
+/* 科技底板上的计数文字改青灰，别用纯白 */
+.idea-wall-tech .idea-wall-count {
+  color: rgba(160, 205, 214, 0.82);
+  letter-spacing: 0.04em;
+}
+
+/* 空状态提示 */
+.idea-wall-tech .idea-wall-empty {
+  color: rgba(160, 205, 214, 0.62);
+}
+
+/* 新建按钮：科技底板上的玻璃质感，保持可读 */
+.idea-wall-tech .idea-wall-new {
+  background: rgba(122, 163, 174, 0.14);
+  color: #cfe6ea;
+  border: 1px solid rgba(122, 163, 174, 0.42);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.28);
+}
+.idea-wall-tech .idea-wall-new:hover {
+  background: rgba(122, 163, 174, 0.24);
+  border-color: rgba(160, 205, 214, 0.62);
+}
+
+/* 便签在深色底板上加一层冷调投影，让纸「浮」起来 */
+.idea-wall-tech .sticky {
+  box-shadow:
+    0 3px 14px rgba(0, 0, 0, 0.42),
+    0 0 0 1px rgba(160, 205, 214, 0.14),
+    0 1px 0 rgba(255, 255, 255, 0.42) inset;
+}
+
 .idea-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));

@@ -20,6 +20,7 @@
 
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { api, ApiFailure, type NoteDetail } from './api';
+import { ParticleField } from './ParticleField';
 
 /** 便签配色：按序号轮换（用户要求"按序号轮序"） */
 export const STICKY_COLORS = [
@@ -196,7 +197,8 @@ export function IdeaWall({
       )}
     </div>
   ) : (
-    <div className="idea-wall">
+    <div className="idea-wall idea-wall-tech">
+      <ParticleField className="idea-wall-particles" gap={13} radius={108} />
       <div className="idea-wall-bar">
         <span className="idea-wall-count">
           {loading ? '加载中…' : `${shown.length} 张便签`}
