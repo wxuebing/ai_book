@@ -156,10 +156,12 @@
   flex-direction: column;
   gap: 9px;
   padding: 16px 18px 13px;
-  border: 1px solid var(--liuyun-3);
+  border: 1px solid var(--glass-edge);
   border-radius: var(--radius-lg);
-  background: linear-gradient(170deg, var(--liuyun-0) 0%, var(--liuyun-1) 74%, rgba(234, 242, 244, 0.4) 100%);
-  box-shadow: var(--shadow-sm);
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  box-shadow: var(--glass-shadow), var(--glass-inner);
   transition:
     transform var(--dur) var(--ease),
     box-shadow var(--dur) var(--ease),
@@ -1965,6 +1967,115 @@ button.side-link:hover {
   text-align: center;
   padding: 0 20px;
   line-height: 1.8;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   灰玻璃（结构层，2026-11-16）
+
+   用户原则：「换主题换颜色，每一个区域都是一样的颜色，就同质化了，
+   眼睛就分不开。」「在卡片、表格、选项的背部添加一块透明的灰玻璃。」
+
+   为什么必须是中性灰而不是主题色：
+     带色相会跟主题打架；灰是唯一能和任何背景共存的色。
+     所以玻璃只随「明暗」走，不随「色相」走 —— 主题声明 glass: light|dark，
+     具体数值在 tokens.css 的 --glass-* 里算。
+
+   三层结构（缺一不可）：
+     ① backdrop-filter: blur —— 把背后杂乱的场景压成均匀底色，
+        这才是「玻璃」和「半透明色块」的区别，也保证了可读性
+     ② 1px 高光边（--glass-border / --glass-inner）—— 模拟玻璃厚度
+     ③ 大半径软阴影（--glass-shadow）—— 让玻璃离背景有距离，浮起来
+   ───────────────────────────────────────────────────────────── */
+
+.glass {
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  border: 1px solid var(--glass-edge);
+  box-shadow: var(--glass-shadow), var(--glass-inner);
+}
+
+/* 密集内容（表格、代码块）：玻璃更实，否则数字和背后山水叠在一起 */
+.glass-solid {
+  background: var(--glass-bg-solid);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  border: 1px solid var(--glass-edge);
+  box-shadow: var(--glass-shadow), var(--glass-inner);
+}
+
+/* 卡片类统一走玻璃（列表卡片、类型卡、参照卡、图片卡、泳道卡） */
+.entry-card,
+.type-card,
+.reference-card,
+.image-card,
+.swimlane-card,
+.group-card {
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  border-color: var(--glass-edge);
+  box-shadow: var(--glass-shadow), var(--glass-inner);
+}
+
+/* 表格容器：实一档的玻璃，保证数字可读 */
+.table-wrap,
+.info-table-wrap {
+  background: var(--glass-bg-solid);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  border: 1px solid var(--glass-edge);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--glass-shadow), var(--glass-inner);
+  overflow: hidden;
+}
+
+/* 表头也要跟着实，否则滚动时文字飘在山水上 */
+.data-table th {
+  background: rgba(242, 239, 233, 0.82);
+}
+
+/* 弹窗：玻璃要更实，因为弹窗内文字密集且需要专注 */
+.entry-dialog,
+.idea-dialog {
+  background: var(--glass-bg-solid);
+  -webkit-backdrop-filter: blur(20px) saturate(120%);
+  backdrop-filter: blur(20px) saturate(120%);
+  border: 1px solid var(--glass-border);
+  box-shadow:
+    0 24px 70px rgba(31, 65, 75, 0.22),
+    0 2px 6px rgba(31, 65, 75, 0.1),
+    var(--glass-inner);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   暗色主题：玻璃基准要反过来（偏深灰），否则文字失读
+   由 html[data-theme] 里的 glass-dark 标记触发
+   ───────────────────────────────────────────────────────────── */
+html[data-glass='dark'] {
+  --glass-bg: rgba(20, 32, 42, 0.5);
+  --glass-bg-solid: rgba(18, 29, 38, 0.84);
+  --glass-border: rgba(160, 205, 214, 0.22);
+  --glass-edge: rgba(160, 205, 214, 0.16);
+  --glass-shadow: 0 6px 24px rgba(0, 0, 0, 0.34), 0 1px 2px rgba(0, 0, 0, 0.22);
+  --glass-inner: inset 0 1px 0 rgba(160, 205, 214, 0.16);
+}
+
+/* 老浏览器不支持 backdrop-filter 时，退化为不透明底，保证可读 */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass,
+  .glass-solid,
+  .book-card,
+  .entry-card,
+  .type-card,
+  .reference-card,
+  .image-card,
+  .swimlane-card,
+  .group-card,
+  .table-wrap,
+  .info-table-wrap {
+    background: var(--liuyun-0);
+  }
 }
 
 /* ─────────────────────────────────────────────────────────────

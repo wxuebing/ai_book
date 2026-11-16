@@ -31,6 +31,13 @@ export interface ThemeMeta {
   accent: string;
   /** 预览用：远山色 */
   far: string;
+  /**
+   * 玻璃明暗基准（2026-11-16）
+   *
+   * 亮色主题用偏白的灰，暗色主题必须用偏深的灰，否则文字会失读。
+   * 只影响结构层（卡片/表格/弹窗），不影响氛围层。
+   */
+  glass?: 'light' | 'dark';
 }
 
 export const THEMES: ThemeMeta[] = [
@@ -42,6 +49,7 @@ export const THEMES: ThemeMeta[] = [
     ink: '#1a2e34',
     accent: '#4e7f8c',
     far: '#b9cdd4',
+    glass: 'light',
   },
   {
     id: 'qinglv',
@@ -51,6 +59,7 @@ export const THEMES: ThemeMeta[] = [
     ink: '#1c3327',
     accent: '#4f8a63',
     far: '#b8cdb0',
+    glass: 'light',
   },
   {
     id: 'yanyu',
@@ -60,6 +69,7 @@ export const THEMES: ThemeMeta[] = [
     ink: '#24343a',
     accent: '#5f8189',
     far: '#c2d2d6',
+    glass: 'light',
   },
   {
     id: 'zhusha',
@@ -69,6 +79,7 @@ export const THEMES: ThemeMeta[] = [
     ink: '#3a2622',
     accent: '#b6503a',
     far: '#e0c3a8',
+    glass: 'light',
   },
   {
     id: 'yuebai',
@@ -78,6 +89,7 @@ export const THEMES: ThemeMeta[] = [
     ink: '#1f2c38',
     accent: '#587f9f',
     far: '#c3d3e2',
+    glass: 'light',
   },
   {
     id: 'zhuying',
@@ -87,6 +99,7 @@ export const THEMES: ThemeMeta[] = [
     ink: '#22301f',
     accent: '#5f8a53',
     far: '#c6d8b6',
+    glass: 'light',
   },
 ];
 
@@ -113,6 +126,9 @@ export function saveTheme(id: ThemeId): void {
 export function applyTheme(id: ThemeId): void {
   if (typeof document !== 'undefined') {
     document.documentElement.dataset.theme = id;
+    // 结构层玻璃的明暗基准：亮色主题用偏白灰，暗色用偏深灰
+    const meta = THEMES.find((t) => t.id === id);
+    document.documentElement.dataset.glass = meta?.glass ?? 'light';
   }
 }
 
