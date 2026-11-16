@@ -90,9 +90,13 @@ print(f"吃掉真背景：{eaten / (side * side):.1%}（保留奶白边框）")
 SS = 4
 geo = Image.new("L", (side * SS, side * SS), 0)
 gd = ImageDraw.Draw(geo)
-gd.rounded_rectangle(
-    [0, 0, side * SS - 1, side * SS - 1], radius=int(side * 0.20) * SS, fill=255
-)
+# 兼容旧版 Pillow（无 rounded_rectangle）：用两个矩形 + 四个圆拼出圆角矩形
+R = int(side * 0.20) * SS
+W2, H2 = side * SS, side * SS
+gd.rectangle([R, 0, W2 - 1 - R, H2 - 1], fill=255)          # 竖条
+gd.rectangle([0, R, W2 - 1, H2 - 1 - R], fill=255)          # 横条
+for cx, cy in [(R, R), (W2 - 1 - R, R), (R, H2 - 1 - R), (W2 - 1 - R, H2 - 1 - R)]:
+    gd.ellipse([cx - R, cy - R, cx + R, cy + R], fill=255)  # 四角圆
 geo = geo.resize((side, side), Image.LANCZOS)
 
 mask = Image.composite(bg_mask, Image.new("L", (side, side), 0), geo)
