@@ -14,6 +14,7 @@ import React, { useEffect, useState } from 'react';
 import { api, type LibraryResponse, type ProjectSummary } from '../api';
 import { Crumbs, Loading } from '../ui';
 import { IdeaWall } from '../IdeaWall';
+import { ReferenceSection } from '../ReferenceSection';
 
 interface Props {
   library: LibraryResponse | null;
@@ -104,13 +105,39 @@ export function NoteWall({ library, defaultProjectId, onReload }: Props): React.
       </header>
 
       {pid && (
-        <IdeaWall
-          key={pid}
-          projectId={pid}
-          showHead={false}
-          minWidth={160}
-          onChange={onReload}
-        />
+        <>
+          <section className="wall-block">
+            <div className="wall-block-head">
+              <h2 className="section-title serif">便签</h2>
+              <span className="section-note">文字想法、杂事、片段</span>
+            </div>
+            <IdeaWall
+              key={`${pid}-text`}
+              projectId={pid}
+              kind="text"
+              showHead={false}
+              minWidth={160}
+              onChange={onReload}
+            />
+          </section>
+
+          <section className="wall-block">
+            <div className="wall-block-head">
+              <h2 className="section-title serif">图片</h2>
+              <span className="section-note">地图、人物图、场景参考</span>
+            </div>
+            <IdeaWall
+              key={`${pid}-image`}
+              projectId={pid}
+              kind="image"
+              variant="gallery"
+              showHead={false}
+              onChange={onReload}
+            />
+          </section>
+
+          <ReferenceSection projectId={pid} onReload={onReload} />
+        </>
       )}
     </div>
   );

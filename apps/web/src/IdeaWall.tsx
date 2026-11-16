@@ -50,6 +50,10 @@ interface Props {
   minWidth?: number;
   /** 变更后通知外部刷新（如统计数字） */
   onChange?: () => void;
+  /** 只显示文字便签 / 只显示图片便签 */
+  kind?: 'all' | 'text' | 'image';
+  /** 便签墙（木板）或图片画廊 */
+  variant?: 'sticky' | 'gallery';
 }
 
 /** 把附件相对路径转成可访问 URL */
@@ -63,6 +67,8 @@ export function IdeaWall({
   showHead = true,
   minWidth = 148,
   onChange,
+  kind = 'all',
+  variant = 'sticky',
 }: Props): React.ReactElement {
   const [ideas, setIdeas] = useState<IdeaItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -104,16 +110,96 @@ export function IdeaWall({
     void load();
   }, [load]);
 
+  // 便签与图片分开：文字便签留在木板，带图便签进入图片区
+  const filtered =
+    kind === 'image'
+      ? ideas.filter((it) => it.image)
+      : kind === 'text'
+        ? ideas.filter((it) => !it.image)
+        : ideas;
+  const shown = limit ? filtered.slice(0, limit) : filtered;
+  const isGallery = variant === 'gallery' || kind === 'image';
+
   const afterChange = () => {
     void load();
     onChange?.();
   };
 
-  const body = (
+  const removeIdea = (it: IdeaItem) => {
+    if (!pid) return;
+    if (!window.confirm(`确定删除「${it.title}」？`)) return;
+    void api
+      .del(`/project/${pid}/note/${it.path.split('/').map(encodeURIComponent).join('/')}`)
+      .then(afterChange)
+      .catch((err) => window.alert(err instanceof ApiFailure ? err.message : String(err)));
+  };
+
+  const body = isGallery ? (
+    <div className="image-wall">
+      <div className="image-wall-bar">
+        <span className="image-wall-count">
+          {loading ? '加载中…' : `${shown.length} 张图片`}
+        </span>
+        {pid && (
+          <button className="btn btn-primary btn-sm" onClick={() => setActive('new')}>
+            ＋ 上传图片
+          </button>
+        )}
+      </div>
+      {loading ? (
+        <div className="image-wall-empty">加载中…</div>
+      ) : shown.length === 0 ? (
+        <div className="image-wall-empty">
+          还没有图片。点「上传图片」把地图、人物图、场景参考钉在这里。
+        </div>
+      ) : (
+        <div className="image-grid">
+          {shown.map((it) => (
+            <div key={it.path} className="image-card">
+              <button className="image-card-main" onClick={() => setActive(it)} title={it.title}>
+                {it.image && pid ? (
+                  <span className="image-card-media">
+                    <img src={attachUrl(pid, it.image)} alt={it.title} loading="lazy" />
+                  </span>
+                ) : (
+                  <span className="image-card-media image-card-media-empty">无图</span>
+                )}
+                <span className="image-card-body">
+                  <span className="image-card-title serif ellipsis">{it.title}</span>
+                  <span className="image-card-excerpt clamp-2">{it.excerpt || '（空）'}</span>
+                </span>
+              </button>
+              <div className="image-card-ops">
+                <button className="sticky-op" title="编辑" onClick={() => setActive(it)}>
+                  <IconEdit />
+                </button>
+                <button className="sticky-op sticky-op-del" title="删除" onClick={() => removeIdea(it)}>
+                  <IconTrash />
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {active && pid && (
+        <IdeaDialog
+          projectId={pid}
+          idea={active === 'new' ? null : active}
+          kind="image"
+          onClose={() => setActive(null)}
+          onSaved={() => {
+            setActive(null);
+            afterChange();
+          }}
+        />
+      )}
+    </div>
+  ) : (
     <div className="idea-wall">
       <div className="idea-wall-bar">
         <span className="idea-wall-count">
-          {loading ? '加载中…' : `${ideas.length} 张便签`}
+          {loading ? '加载中…' : `${shown.length} 张便签`}
         </span>
         {pid && (
           <button className="idea-wall-new" onClick={() => setActive('new')}>
@@ -123,7 +209,7 @@ export function IdeaWall({
       </div>
       {loading ? (
         <div className="idea-wall-empty">加载中…</div>
-      ) : ideas.length === 0 ? (
+      ) : shown.length === 0 ? (
         <div className="idea-wall-empty">
           还没有便签。点「新建便签」记下第一条零碎想法。
         </div>
@@ -132,7 +218,7 @@ export function IdeaWall({
           className="idea-grid"
           style={{ gridTemplateColumns: `repeat(auto-fill, minmax(${minWidth}px, 1fr))` }}
         >
-          {ideas.map((it, i) => (
+          {shown.map((it, i) => (
             <div
               key={it.path}
               className={`sticky ${it.image ? 'sticky-has-image' : ''}`}
@@ -171,12 +257,7 @@ export function IdeaWall({
                   title="删除"
                   onClick={(e) => {
                     e.stopPropagation();
-                    if (!pid) return;
-                    if (!window.confirm(`确定删除便签「${it.title}」？`)) return;
-                    void api
-                      .del(`/project/${pid}/note/${it.path.split('/').map(encodeURIComponent).join('/')}`)
-                      .then(afterChange)
-                      .catch((err) => window.alert(err instanceof ApiFailure ? err.message : String(err)));
+                    removeIdea(it);
                   }}
                 >
                   <IconTrash />
@@ -191,6 +272,7 @@ export function IdeaWall({
         <IdeaDialog
           projectId={pid}
           idea={active === 'new' ? null : active}
+          kind="text"
           onClose={() => setActive(null)}
           onSaved={() => {
             setActive(null);
@@ -221,12 +303,14 @@ export function IdeaWall({
 function IdeaDialog({
   projectId,
   idea,
+  kind = 'text',
   onClose,
   onSaved,
 }: {
   projectId: string;
   /** null = 新建 */
   idea: IdeaItem | null;
+  kind?: 'text' | 'image';
   onClose: () => void;
   onSaved: () => void;
 }): React.ReactElement {
@@ -302,6 +386,10 @@ function IdeaDialog({
       setErr('标题不能为空');
       return;
     }
+    if (kind === 'image' && !image) {
+      setErr('请先上传图片');
+      return;
+    }
     setBusy(true);
     setErr(null);
     try {
@@ -336,7 +424,11 @@ function IdeaDialog({
         role="dialog"
         aria-modal="true"
       >
-        <h2 className="dialog-title serif">{idea ? '便签详情' : '新建便签'}</h2>
+        <h2 className="dialog-title serif">
+          {idea
+            ? kind === 'image' ? '图片详情' : '便签详情'
+            : kind === 'image' ? '上传图片' : '新建便签'}
+        </h2>
 
         {loading ? (
           <div className="idea-dialog-loading">加载中…</div>
@@ -397,7 +489,7 @@ function IdeaDialog({
                 取消
               </button>
               <button className="btn btn-primary btn-md" onClick={() => void save()} disabled={busy}>
-                {busy ? '保存中…' : idea ? '保存' : '创建便签'}
+                {busy ? '保存中…' : idea ? '保存' : kind === 'image' ? '创建图片' : '创建便签'}
               </button>
             </div>
           </>

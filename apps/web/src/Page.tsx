@@ -15,6 +15,8 @@ import { SettingsPage } from './SettingsPage';
 import { BottomPage } from './pages/BottomPage';
 import { NoteWall } from './pages/NoteWall';
 import { WritingPage } from './pages/WritingPage';
+import { PlotBoard } from './pages/PlotBoard';
+import { GraphPage } from './pages/GraphPage';
 import { ProjectSubNav } from './ProjectSubNav';
 import { NotFound } from './pages/NotFound';
 
@@ -31,6 +33,7 @@ interface Props {
 function sectionOf(id: string): string {
   switch (id) {
     case 'outline': return 'outline';
+    case 'plot': return 'plot';
     case 'chapterOutline': return 'chapter-outline';
     case 'threads': return 'threads';
     case 'characters': return 'characters';
@@ -67,6 +70,14 @@ export function Page(props: Props): React.ReactElement {
         />
       );
 
+    // 剧情（一级导航）：类型图谱，全局页
+    case 'plot':
+      return <PlotBoard />;
+
+    // 关系网（一级导航）：全局页，右上角切换小说
+    case 'graph':
+      return <GraphPage library={props.library} activeProjectId={props.activeProjectId} />;
+
     case 'project': {
       const projectId = (s.length === 1 ? props.activeProjectId : s[1]!) ?? '';
       // 选中的小说名（用于二级导航标题）
@@ -87,6 +98,8 @@ export function Page(props: Props): React.ReactElement {
               <ProjectHome {...props} projectId={props.activeProjectId} />
             ) : s.length >= 3 && sectionOf(rawSection) === 'manuscript' ? (
               <WritingPage projectId={projectId} onReload={props.onReload} />
+            ) : s.length >= 3 && sectionOf(rawSection) === 'plot' ? (
+              <PlotBoard />
             ) : s.length >= 3 ? (
               <ProjectSection
                 projectId={projectId}

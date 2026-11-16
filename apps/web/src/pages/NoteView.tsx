@@ -35,6 +35,8 @@ interface Props {
 export function NoteView({ activeProjectId, onReload }: Props): React.ReactElement {
   const params = new URLSearchParams(window.location.search);
   const notePath = params.get('path') ?? '';
+  // 全局页面（关系网/剧情）可能选择非激活书：允许用 ?project= 指定
+  const projectId = params.get('project') ?? activeProjectId;
 
   const [note, setNote] = useState<NoteDetail | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -44,10 +46,10 @@ export function NoteView({ activeProjectId, onReload }: Props): React.ReactEleme
   const prefs = React.useMemo(() => loadPrefs(), []);
 
   const load = React.useCallback(async () => {
-    if (!activeProjectId || !notePath) return;
+    if (!projectId || !notePath) return;
     try {
       const n = await api.get<NoteDetail>(
-        `/project/${activeProjectId}/note/${encodeURI(notePath)}`,
+        `/project/${projectId}/note/${encodeURI(notePath)}`,
       );
       setNote(n);
       setDraft(n.body);
@@ -55,7 +57,7 @@ export function NoteView({ activeProjectId, onReload }: Props): React.ReactEleme
     } catch (err) {
       setError(err instanceof ApiFailure ? err.message : String(err));
     }
-  }, [activeProjectId, notePath]);
+  }, [projectId, notePath]);
 
   useEffect(() => {
     void load();
@@ -80,10 +82,10 @@ export function NoteView({ activeProjectId, onReload }: Props): React.ReactEleme
   if (!note) return <div className="page"><Loading rows={8} /></div>;
 
   const save = async () => {
-    if (!activeProjectId) return;
+    if (!projectId) return;
     setBusy(true);
     try {
-      await api.patch(`/project/${activeProjectId}/note/${encodeURI(note.path)}`, { body: draft });
+      await api.patch(`/project/${projectId}/note/${encodeURI(note.path)}`, { body: draft });
       await load();
       await onReload();
       setEditing(false);
@@ -98,7 +100,7 @@ export function NoteView({ activeProjectId, onReload }: Props): React.ReactEleme
     <div className="page note-page">
       <Crumbs
         items={[
-          { label: '项目库', to: `/project/${activeProjectId}` },
+          { label: '项目库', to: `/project/${projectId}` },
           { label: note.folder || '根目录' },
           { label: note.title },
         ]}
@@ -149,7 +151,7 @@ export function NoteView({ activeProjectId, onReload }: Props): React.ReactEleme
             <Markdown
               blocks={withoutLeadingTitle(note.blocks, note.title)}
               currentPath={note.path}
-              projectId={note.projectId ?? activeProjectId ?? undefined}
+              projectId={note.projectId ?? projectId ?? undefined}
             />
           )}
         </article>

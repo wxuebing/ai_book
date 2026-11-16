@@ -25,7 +25,7 @@ const EXPAND_KEY = 'loom:nav:expanded';
 const ROOT_OPEN_KEY = 'loom:nav:rootOpen';
 
 export interface NavSelection {
-  root: 'library' | 'ideas' | 'graph' | 'project' | 'settings' | 'tools' | 'bottom';
+  root: 'library' | 'ideas' | 'plot' | 'graph' | 'project' | 'settings' | 'tools' | 'bottom';
   secondary?: string;
   tertiary?: string;
 }
@@ -233,14 +233,31 @@ export function Nav({
           </div>
         </section>
 
-        {/* ═══════════ 一级 3：关系网 ═══════════ */}
+        {/* ═══════════ 一级 3：剧情（全局，右上角切换小说）═══════════ */}
+        <section className="nav-root">
+          <div className="nav-root-row">
+            <button
+              className={`nav-root-head ${selection.root === 'plot' ? 'is-active' : ''}`}
+              onClick={() => {
+                onSelect({ root: 'plot' });
+                navigate('/plot');
+              }}
+              title="剧情"
+            >
+              <IconPlot />
+              {!collapsed && <span className="nav-root-label">剧情</span>}
+            </button>
+          </div>
+        </section>
+
+        {/* ═══════════ 一级 4：关系网（全局，右上角切换小说）═══════════ */}
         <section className="nav-root">
           <div className="nav-root-row">
             <button
               className={`nav-root-head ${selection.root === 'graph' ? 'is-active' : ''}`}
               onClick={() => {
                 onSelect({ root: 'graph' });
-                if (activeProjectId) navigate(`/project/${activeProjectId}/graph`);
+                navigate('/graph');
               }}
               title="关系网"
             >
@@ -332,7 +349,9 @@ export function Nav({
           title="设置"
           aria-label="设置"
         >
-          <IconGear />
+          <span className="nav-bottom-icon" aria-hidden="true">
+            <IconGear />
+          </span>
         </button>
         <button
           className={`nav-bottom-btn ${selection.root === 'bottom' && selection.secondary === 'io' ? 'is-active' : ''}`}
@@ -343,7 +362,9 @@ export function Nav({
           title="导入导出"
           aria-label="导入导出"
         >
-          <IconImportExport />
+          <span className="nav-bottom-icon" aria-hidden="true">
+            <IconImportExport />
+          </span>
         </button>
       </div>
 
@@ -376,6 +397,7 @@ export function Nav({
 export function routeOfEntry(id: string): string {
   switch (id) {
     case 'outline': return 'outline';
+    case 'plot': return 'plot';
     case 'chapterOutline': return 'chapter-outline';
     case 'threads': return 'threads';
     case 'characters': return 'characters';
@@ -456,6 +478,21 @@ function IconProject(): React.ReactElement {
   );
 }
 
+/** 剧情：一条竖脊 + 三个节点，表示故事骨架 */
+function IconPlot(): React.ReactElement {
+  return (
+    <span className="nav-icon" aria-hidden="true">
+      <svg viewBox="0 0 16 16" width="17" height="17" fill="none">
+        <path d="M4.5 2.5v11" stroke="currentColor" strokeWidth="1.15" strokeLinecap="round" />
+        <circle cx="4.5" cy="4" r="1.4" stroke="currentColor" strokeWidth="1.1" />
+        <circle cx="4.5" cy="8" r="1.4" stroke="currentColor" strokeWidth="1.1" />
+        <circle cx="4.5" cy="12" r="1.4" stroke="currentColor" strokeWidth="1.1" />
+        <path d="M6.2 4h5.6M6.2 8h4M6.2 12h5" stroke="currentColor" strokeWidth="1.1" strokeLinecap="round" opacity=".7" />
+      </svg>
+    </span>
+  );
+}
+
 /** 工具库图标：扳手+齿轮感，与「书籍/文件夹」明确区分 */
 function IconTools(): React.ReactElement {
   return (
@@ -473,21 +510,17 @@ function IconTools(): React.ReactElement {
   );
 }
 
-/** 设置：齿轮（带齿，绝非小太阳） */
+/** 设置：古风齿轮（厚齿如云头，非细射线，避免像小太阳）—— 外圈厚齿 + 轮体 + 中心轴 */
 function IconGear(): React.ReactElement {
   return (
-    <svg viewBox="0 0 24 24" width="17" height="17" fill="none" aria-hidden="true">
-      <path
-        d="M12 15.4a3.4 3.4 0 100-6.8 3.4 3.4 0 000 6.8z"
-        stroke="currentColor"
-        strokeWidth="1.5"
-      />
-      <path
-        d="M19.2 13.1a1.6 1.6 0 00.32 1.77l.06.06a1.94 1.94 0 11-2.75 2.75l-.06-.06a1.6 1.6 0 00-1.77-.32 1.6 1.6 0 00-.97 1.47v.16a1.94 1.94 0 11-3.88 0v-.09a1.6 1.6 0 00-1.05-1.47 1.6 1.6 0 00-1.77.32l-.06.06a1.94 1.94 0 11-2.75-2.75l.06-.06a1.6 1.6 0 00.32-1.77 1.6 1.6 0 00-1.47-.97H4a1.94 1.94 0 110-3.88h.09a1.6 1.6 0 001.47-1.05 1.6 1.6 0 00-.32-1.77l-.06-.06a1.94 1.94 0 112.75-2.75l.06.06a1.6 1.6 0 001.77.32H9.9a1.6 1.6 0 00.97-1.47V4a1.94 1.94 0 113.88 0v.09a1.6 1.6 0 00.97 1.47 1.6 1.6 0 001.77-.32l.06-.06a1.94 1.94 0 112.75 2.75l-.06.06a1.6 1.6 0 00-.32 1.77V9.9a1.6 1.6 0 001.47.97H20a1.94 1.94 0 110 3.88h-.09a1.6 1.6 0 00-1.47.97z"
-        stroke="currentColor"
-        strokeWidth="1.35"
-        strokeLinejoin="round"
-      />
+    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" aria-hidden="true">
+      <g stroke="currentColor" strokeWidth="3" strokeLinecap="round">
+        {[0, 45, 90, 135, 180, 225, 270, 315].map((a) => (
+          <line key={a} x1="12" y1="3.1" x2="12" y2="6.1" transform={`rotate(${a} 12 12)`} />
+        ))}
+      </g>
+      <circle cx="12" cy="12" r="6.4" stroke="currentColor" strokeWidth="1.5" />
+      <circle cx="12" cy="12" r="2.6" stroke="currentColor" strokeWidth="1.4" />
     </svg>
   );
 }
@@ -529,18 +562,37 @@ function IconGraph(): React.ReactElement {
   );
 }
 
-/** 导入导出：左入右出两支箭头 + 底部托盘，方向清晰 */
+/** 导入导出：一轴书卷 + 左入箭头 / 右出箭头，古意清晰 */
 function IconImportExport(): React.ReactElement {
   return (
-    <svg viewBox="0 0 16 16" width="16" height="16" fill="none" aria-hidden="true">
-      {/* 左：导入（向下进托盘） */}
-      <path d="M5 2v6" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" />
-      <path d="M2.9 5.9L5 8l2.1-2.1" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
-      {/* 右：导出（向上出） */}
-      <path d="M11 8V2" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" />
-      <path d="M8.9 4.1L11 2l2.1 2.1" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
-      {/* 底部托盘 */}
-      <path d="M2.6 11.2v1.4a1 1 0 001 1h8.8a1 1 0 001-1v-1.4" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
+    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" aria-hidden="true">
+      {/* 卷轴主体 */}
+      <rect x="8.6" y="4.6" width="6.8" height="14.8" rx="3.4" stroke="currentColor" strokeWidth="1.3" />
+      <path
+        d="M10.7 8.4h2.6M10.7 11.1h2.6M10.7 13.8h2.6"
+        stroke="currentColor"
+        strokeWidth="1.05"
+        strokeLinecap="round"
+        opacity=".7"
+      />
+      {/* 导入：左侧箭头指入卷轴 */}
+      <path d="M2.5 9.1h4.4" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
+      <path
+        d="M5.2 7.2l1.9 1.9-1.9 1.9"
+        stroke="currentColor"
+        strokeWidth="1.3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      {/* 导出：右侧箭头指出 */}
+      <path d="M17.1 14.9h4.4" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
+      <path
+        d="M20.4 13l1.9 1.9-1.9 1.9"
+        stroke="currentColor"
+        strokeWidth="1.3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
     </svg>
   );
 }

@@ -40,6 +40,11 @@ const SECTION_META: Record<string, { label: string; hint: string; types: string[
     hint: '全书骨架、分卷。先有大纲，才有章纲；先有章纲，才写正文。',
     types: ['大纲'],
   },
+  plot: {
+    label: '剧情',
+    hint: '故事问题、三幕九拍、冲突引擎、场景卡。把「想写」变成「能写」。',
+    types: [],
+  },
   ideas: {
     label: '灵感',
     hint: '灵感宝库 —— 紧接大纲，是创作的源头。这里的条目会同步出现在统计页的便签墙上。',
